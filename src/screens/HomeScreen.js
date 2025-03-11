@@ -15,6 +15,7 @@ import PlayerScreen from './PlayerScreen';
 import CardsScreen from './CardsScreen';
 import LoadingAleaScreen from './LoadingAleaScreen';
 import aleaChallengesData from '../components/aleaChallengesData';
+import DreamBoardScreen from './DreamBoardScreen';
 
 const fontMontserratRegular = 'Montserrat-Regular';
 const fontDMSansRegular = 'DMSans18pt-Regular';
@@ -545,8 +546,8 @@ const HomeScreen = () => {
         <SettingsScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} isNotificationEnabled={isNotificationEnabled} setNotificationEnabled={setNotificationEnabled}/>
       ) : selectedScreen === 'Articles' ? (
         <ArticlesScreen setSelectedScreen={setSelectedScreen} />
-      ) : selectedScreen === 'Player' ? (
-        <PlayerScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} />
+      ) : selectedScreen === 'DreamBoard' ? (
+        <DreamBoardScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} />
       ) : selectedScreen === 'Cards' ? (
         <CardsScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} isPianoStarted={isPianoStarted} setIsPianoStarted={setIsPianoStarted} />
       ) : selectedScreen === 'LoadingScreen' ? (

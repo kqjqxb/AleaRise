@@ -182,6 +182,7 @@ const HomeScreen = () => {
         const growthJournal = storedJournal ? JSON.parse(storedJournal) : [];
         growthJournal.unshift(completedEntry);
         await AsyncStorage.setItem('growthJournal', JSON.stringify(growthJournal));
+        setSelectedUpBtn('Growth journal');
         loadGrowthJournal();
         setCurrentChallenge(null);
         setIsBeginWasVisible(false);
@@ -586,7 +587,7 @@ const HomeScreen = () => {
               )}
               <ScrollView showsVerticalScrollIndicator={false}
                 contentContainerStyle={{
-                  paddingBottom: dimensions.height * 0.16,
+                  paddingBottom: dimensions.height * 0.25,
                   alignSelf: 'center'
                 }}>
                 {growthJournal.map((growth, index) => (

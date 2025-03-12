@@ -150,8 +150,9 @@ const CardsScreen = ({ setSelectedAleaScreen }) => {
                 fontFamily: fontPontanoSansRegular,
                 color: 'black',
                 fontSize: dimensions.width * 0.043,
-                textAlign: 'left',
+                textAlign: 'center',
                 alignSelf: 'center',
+                bottom: dimensions.height * 0.005,
                 fontWeight: 700,
               }}>
               Rise & Start!
@@ -327,37 +328,39 @@ const CardsScreen = ({ setSelectedAleaScreen }) => {
             </ScrollView>
           </View>
 
-          <TouchableOpacity onPress={() => {
-            setModalVisible(true);
-          }}
-            disabled={!selectedPerson}
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: dimensions.width * 0.025,
-              borderColor: 'white',
-              width: dimensions.width * 0.8,
-              borderWidth: dimensions.width * 0.003,
-              backgroundColor: 'white',
-              alignSelf: 'center',
-              position: 'absolute',
-              bottom: dimensions.height * 0.07,
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: fontPlusJakartaSansRegular,
-                color: 'black',
-                fontSize: dimensions.width * 0.043,
-                textAlign: 'center',
-                fontWeight: 600,
-                paddingVertical: dimensions.height * 0.016,
-              }}>
-              Unveil Insights
-            </Text>
-          </TouchableOpacity>
+
         </SafeAreaView>
       )}
+
+      <TouchableOpacity onPress={() => {
+        setModalVisible(true);
+      }}
+        disabled={!selectedPerson}
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderRadius: dimensions.width * 0.025,
+          borderColor: 'white',
+          width: dimensions.width * 0.8,
+          borderWidth: dimensions.width * 0.003,
+          backgroundColor: 'white',
+          alignSelf: 'center',
+          position: 'absolute',
+          bottom: dimensions.height * 0.12,
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: fontPlusJakartaSansRegular,
+            color: 'black',
+            fontSize: dimensions.width * 0.043,
+            textAlign: 'center',
+            fontWeight: 600,
+            paddingVertical: dimensions.height * 0.016,
+          }}>
+          Unveil Insights
+        </Text>
+      </TouchableOpacity>
 
       <Modal
         animationType="slide"

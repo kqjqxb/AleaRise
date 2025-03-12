@@ -49,7 +49,7 @@ const RunGameScreen = ({ setSelectedAleaScreen, isRunGameStarted, setIsRunGameSt
     };
 
     loadGameRecords();
-  }, [isRunGameStarted]); 
+  }, [isRunGameStarted]);
 
   useEffect(() => {
     const onChange = ({ window }) => {
@@ -178,7 +178,7 @@ const RunGameScreen = ({ setSelectedAleaScreen, isRunGameStarted, setIsRunGameSt
             }}>
             🔥 Ready for the challenge? 🔥{'\n'}
 
-            {'\n'}Your character is racing forward, and your task is to jump in time, avoiding obstacles. ⏳ Small and large barriers will test your reflexes, while springs 🧘 will help you jump higher and reach platforms with valuable resources 💎. But be careful: traps may appear from above ⚠️, and one wrong move will lead to failure. 🎮
+            {'\n'}Your character is racing forward, and your task is to jump in time, causing damage. ⏳ Small and large barriers test your reflexes. But be careful: the more points - the greater the speed. 🎮
           </Text>
 
           {gameRecors.length > 0 && (

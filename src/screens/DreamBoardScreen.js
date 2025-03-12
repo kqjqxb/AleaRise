@@ -134,7 +134,6 @@ const DreamBoardScreen = ({ setSelectedScreen, selectedScreen }) => {
       if (isDreamBoardPickWasVisible) {
         setAddDreamVisible(false);
       }
-
     } catch (error) {
       console.error('Error saving dream:', error);
     }
@@ -246,23 +245,23 @@ const DreamBoardScreen = ({ setSelectedScreen, selectedScreen }) => {
       ) : dreams.length !== 0 && !addDreamVisible ? (
         <View style={{
           alignSelf: 'center',
-          height: dimensions.height * 0.8,
+          height: dimensions.height * 0.82,
         }}>
           <ScrollView contentContainerStyle={{ paddingBottom: dimensions.height * 0.16 }} style={{ alignSelf: 'center', width: dimensions.width * 0.9 }}>
             {dreams.map((dream, index) => (
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={() => {
                   setSelectedDreamToDelete(dream);
                   handleDeleteDream();
                 }}
-              key={dream.id} style={{
-                width: dimensions.width * 0.9,
-                borderColor: 'white',
-                borderWidth: dimensions.width * 0.005,
-                borderRadius: dimensions.width * 0.025,
-                paddingVertical: dimensions.height * 0.014,
-                marginTop: dimensions.height * 0.03,
-              }}>
+                key={dream.id} style={{
+                  width: dimensions.width * 0.9,
+                  borderColor: 'white',
+                  borderWidth: dimensions.width * 0.005,
+                  borderRadius: dimensions.width * 0.025,
+                  paddingVertical: dimensions.height * 0.014,
+                  marginTop: dimensions.height * 0.03,
+                }}>
                 <Text
                   style={{
                     fontFamily: fontDMSansRegular,
@@ -273,7 +272,7 @@ const DreamBoardScreen = ({ setSelectedScreen, selectedScreen }) => {
                     alignSelf: 'center',
                     maxWidth: dimensions.width * 0.55,
                     fontWeight: 700,
-                    
+
                   }}>
                   {dream.dreamCategory}
                 </Text>
@@ -404,7 +403,7 @@ const DreamBoardScreen = ({ setSelectedScreen, selectedScreen }) => {
               setAddDreamVisible(true);
             }}
             style={{
-              width: dimensions.width * 0.9,
+              width: dimensions.width * 0.8,
               height: dimensions.height * 0.062,
               backgroundColor: 'white',
               borderRadius: dimensions.width * 0.025,

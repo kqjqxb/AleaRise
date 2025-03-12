@@ -16,6 +16,7 @@ import CardsScreen from './CardsScreen';
 import LoadingAleaScreen from './LoadingAleaScreen';
 import aleaChallengesData from '../components/aleaChallengesData';
 import DreamBoardScreen from './DreamBoardScreen';
+import RunGameScreen from './RunGameScreen';
 
 const fontMontserratRegular = 'Montserrat-Regular';
 const fontDMSansRegular = 'DMSans18pt-Regular';
@@ -64,7 +65,7 @@ const HomeScreen = () => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
   const [selectedScreen, setSelectedScreen] = useState('Home');
 
-  const [isPianoStarted, setIsPianoStarted] = useState(false);
+  const [isRunGameStarted, setIsRunGameStarted] = useState(false);
 
   const [selectedUpBtn, setSelectedUpBtn] = useState('Challenge');
   const [isDifficultWasVisible, setIsDifficultWasVisible] = useState(false);
@@ -544,19 +545,19 @@ const HomeScreen = () => {
         </SafeAreaView>
       ) : selectedScreen === 'Settings' ? (
         <SettingsScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} isNotificationEnabled={isNotificationEnabled} setNotificationEnabled={setNotificationEnabled}/>
-      ) : selectedScreen === 'Articles' ? (
-        <ArticlesScreen setSelectedScreen={setSelectedScreen} />
+      ) : selectedScreen === 'RunGame' ? (
+        <RunGameScreen setSelectedScreen={setSelectedScreen} isRunGameStarted={isRunGameStarted} setIsRunGameStarted={setIsRunGameStarted} />
       ) : selectedScreen === 'DreamBoard' ? (
         <DreamBoardScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} />
       ) : selectedScreen === 'Cards' ? (
-        <CardsScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} isPianoStarted={isPianoStarted} setIsPianoStarted={setIsPianoStarted} />
+        <CardsScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} />
       ) : selectedScreen === 'LoadingScreen' ? (
-        <LoadingAleaScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} isPianoStarted={isPianoStarted} setIsPianoStarted={setIsPianoStarted} />
+        <LoadingAleaScreen setSelectedScreen={setSelectedScreen} />
       ) : null}
 
       {selectedScreen !== 'BubblesGame' &&
         selectedScreen !== 'LocDetails' &&
-        !(selectedScreen === 'Piano' && isPianoStarted) && (
+        !(selectedScreen === 'RunGame' && isRunGameStarted) && (
           <View
             style={{
               position: 'absolute',

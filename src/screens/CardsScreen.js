@@ -63,6 +63,14 @@ const CardsScreen = ({ setSelectedScreen }) => {
 
   const data = getDataByPersonalityCategory(selectedPersonalityCategory);
 
+  useEffect(() => {
+    setCurrentIndex(0);
+    setSelectedPerson(null);
+    if (slidesRef.current) {
+      slidesRef.current.scrollTo({ x: 0, animated: true });
+    }
+  }, [data])
+
 
 
   useEffect(() => {
@@ -353,7 +361,7 @@ const CardsScreen = ({ setSelectedScreen }) => {
               backgroundColor: 'white',
               alignSelf: 'center',
               position: 'absolute',
-              bottom: dimensions.height * 0.08,
+              bottom: dimensions.height * 0.07,
             }}
           >
             <Text
@@ -553,12 +561,12 @@ const CardsScreen = ({ setSelectedScreen }) => {
                 style={{
                   fontFamily: fontDMSansRegular,
                   color: 'white',
-                  fontSize: dimensions.width * 0.04,
+                  fontSize: dimensions.width * 0.037,
                   textAlign: 'left',
                   alignSelf: 'flex-start',
                   fontWeight: 500,
                   paddingHorizontal: dimensions.width * 0.05,
-                  marginTop: dimensions.height * 0.1,
+                  marginTop: dimensions.height * 0.05,
                 }}>
                 {selectedPerson?.fullText}
               </Text>

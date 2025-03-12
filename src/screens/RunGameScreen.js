@@ -19,7 +19,6 @@ const fontPontanoSansRegular = 'PontanoSans-Regular';
 
 const RunGameScreen = ({ setSelectedScreen, isRunGameStarted, setIsRunGameStarted }) => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
-  const [selectedPerson, setSelectedPerson] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
   const [playerBottom, setPlayerBottom] = useState(0);
@@ -46,7 +45,7 @@ const RunGameScreen = ({ setSelectedScreen, isRunGameStarted, setIsRunGameStarte
     let gameTimerId = setInterval(() => {
       if (isJumping) {
         setPlayerBottom(pb => {
-          const newPb = pb + jumpVelocity;
+          const newPb = pb + jumpVelocity + dimensions.height * 0.0005;
           return newPb > dimensions.height * 0.4 ? dimensions.height * 0.4 : newPb;
         });
         setJumpVelocity(v => v - gravity);
@@ -80,7 +79,7 @@ const RunGameScreen = ({ setSelectedScreen, isRunGameStarted, setIsRunGameStarte
         setIsJumping(false);
         setJumpVelocity(0);
       }
-    }, 30);
+    }, 10);
     return () => clearInterval(gameTimerId);
   }, [isJumping, jumpVelocity, playerBottom, obstacleX, obstacleSize, dimensions.height, dimensions.width]);
 

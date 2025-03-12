@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   Dimensions,
   Image,
-  Linking,
   SafeAreaView,
   Switch,
   Modal,
@@ -14,16 +13,15 @@ import {
 import RNRestart from 'react-native-restart';
 
 const fontPlusJakartaSansRegular = 'PlusJakartaSans-Regular';
-const fontPontanoSansRegular = 'PontanoSans-Regular';
 
-const SettingsScreen = ({ setSelectedScreen, isNotificationEnabled, setNotificationEnabled }) => {
+const SettingsScreen = ({ setSelectedAleaScreen, isVibrationEnabled, setVibrationEnabled }) => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
   const [modalVisible, setModalVisible] = useState(false);
 
   const toggleNotificationSwitch = () => {
-    const newValue = !isNotificationEnabled;
-    setNotificationEnabled(newValue);
-    saveSettings('isNotificationEnabled', newValue);
+    const newValue = !isVibrationEnabled;
+    setVibrationEnabled(newValue);
+    saveSettings('isVibrationEnabled', newValue);
   };
   const saveSettings = async (key, value) => {
     try {
@@ -52,7 +50,6 @@ const SettingsScreen = ({ setSelectedScreen, isNotificationEnabled, setNotificat
       justifyContent: 'center',
       flex: 1
     }}>
-
       <View style={{
         width: dimensions.width * 0.9,
         alignSelf: 'center',
@@ -99,7 +96,7 @@ const SettingsScreen = ({ setSelectedScreen, isNotificationEnabled, setNotificat
             thumbColor={'#2BE281'}
             ios_backgroundColor="#3E3E3E"
             onValueChange={toggleNotificationSwitch}
-            value={isNotificationEnabled}
+            value={isVibrationEnabled}
           />
         </View>
         <TouchableOpacity 
@@ -126,7 +123,6 @@ const SettingsScreen = ({ setSelectedScreen, isNotificationEnabled, setNotificat
           </Text>
         </TouchableOpacity>
       </View>
-
 
       <Modal
         animationType="fade"

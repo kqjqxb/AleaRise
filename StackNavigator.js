@@ -12,7 +12,6 @@ import { UserProvider, UserContext } from './src/context/UserContext';
 import { Provider, useDispatch } from 'react-redux';
 import store from './src/redux/store';
 import { loadUserData } from './src/redux/userSlice';
-import { AudioProvider } from './src/context/AudioContext';
 import LoadingAleaScreen from './src/screens/LoadingAleaScreen';
 
 
@@ -34,43 +33,43 @@ const AleaRiseStack = () => {
 
 const AppNavigator = () => {
   const dispatch = useDispatch();
-  const [isOnboardingReginasVisible, setIsOnboardingReginasVisible] = useState(false);
+  const [isOnboardingAleaRiseVisible, setIsOnboardingAleaRiseVisible] = useState(false);
   const { user, setUser } = useContext(UserContext);
 
 
-  const [initializingReginasGlowApp, setInitializingReginasGlowApp] = useState(true);
+  const [initializingAleaRiseApp, setInitializingAleaRiseApp] = useState(true);
 
   useEffect(() => {
     dispatch(loadUserData());
   }, [dispatch]);
 
   useEffect(() => {
-    const loadReginasGreenGlowUser = async () => {
+    const loadAleaRiseUser = async () => {
       try {
         const deviceId = await DeviceInfo.getUniqueId();
         const storageKey = `currentUser_${deviceId}`;
-        const storedReginasUser = await AsyncStorage.getItem(storageKey);
-        const isReginasOnbWasVisible = await AsyncStorage.getItem('isReginasOnbWasVisible');
+        const storedAleaRiseUser = await AsyncStorage.getItem(storageKey);
+        const isAleaRiseOnboardWasVisible = await AsyncStorage.getItem('isAleaRiseOnboardWasVisible');
 
-        if (storedReginasUser) {
-          setUser(JSON.parse(storedReginasUser));
-          setIsOnboardingReginasVisible(false);
-        } else if (isReginasOnbWasVisible) {
-          setIsOnboardingReginasVisible(false);
+        if (storedAleaRiseUser) {
+          setUser(JSON.parse(storedAleaRiseUser));
+          setIsOnboardingAleaRiseVisible(false);
+        } else if (isAleaRiseOnboardWasVisible) {
+          setIsOnboardingAleaRiseVisible(false);
         } else {
-          setIsOnboardingReginasVisible(true);
-          await AsyncStorage.setItem('isReginasOnbWasVisible', 'true');
+          setIsOnboardingAleaRiseVisible(true);
+          await AsyncStorage.setItem('isAleaRiseOnboardWasVisible', 'true');
         }
       } catch (error) {
         console.error('Error loading of reginas user', error);
       } finally {
-        setInitializingReginasGlowApp(false);
+        setInitializingAleaRiseApp(false);
       }
     };
-    loadReginasGreenGlowUser();
+    loadAleaRiseUser();
   }, [setUser]);
 
-  if (initializingReginasGlowApp) {
+  if (initializingAleaRiseApp) {
     return (
       <View style={{
         backgroundColor: '#050505',
@@ -85,13 +84,11 @@ const AppNavigator = () => {
 
   return (
     <NavigationContainer>
-      <AudioProvider>
-        <Stack.Navigator initialRouteName={isOnboardingReginasVisible ? 'OnboardingScreen' : 'LoadingAleaScreen'}>
-          <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="LoadingAleaScreen" component={LoadingAleaScreen} options={{ headerShown: false }} />
-        </Stack.Navigator>
-      </AudioProvider>
+      <Stack.Navigator initialRouteName={isOnboardingAleaRiseVisible ? 'OnboardingScreen' : 'LoadingAleaScreen'}>
+        <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="LoadingAleaScreen" component={LoadingAleaScreen} options={{ headerShown: false }} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };

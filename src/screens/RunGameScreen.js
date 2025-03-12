@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { use, useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -10,16 +11,15 @@ import {
   Modal,
   Alert,
 } from 'react-native';
-
-const fontDMSansRegular = 'DMSans18pt-Regular';
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
 const fontPlusJakartaSansRegular = 'PlusJakartaSans-Regular';
 const fontPontanoSansRegular = 'PontanoSans-Regular';
 
-
-const RunGameScreen = ({ setSelectedScreen, isRunGameStarted, setIsRunGameStarted }) => {
+const RunGameScreen = ({ setSelectedAleaScreen, isRunGameStarted, setIsRunGameStarted, isVibrationEnabled }) => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
   const [modalVisible, setModalVisible] = useState(false);
+  const [runScore, setRunScore] = useState(0);
 
   const [playerBottom, setPlayerBottom] = useState(0);
   const [isJumping, setIsJumping] = useState(false);
@@ -28,6 +28,28 @@ const RunGameScreen = ({ setSelectedScreen, isRunGameStarted, setIsRunGameStarte
 
   const [obstacleX, setObstacleX] = useState(dimensions.width);
   const [obstacleSize, setObstacleSize] = useState(dimensions.width * 0.12);
+  const [gameRecors, setGameRecors] = useState([]);
+  const [bestRecord, setBestRecord] = useState(0);
+  const [startedSpeed, setStartedSpeed] = useState(5);
+
+  useEffect(() => {
+    const loadGameRecords = async () => {
+      try {
+        const existingRecords = await AsyncStorage.getItem('gameRecords');
+        const records = existingRecords ? JSON.parse(existingRecords) : [];
+        setGameRecors(records);
+        if (records.length > 0) {
+          setBestRecord(Math.max(...records));
+        } else {
+          setBestRecord(0);
+        }
+      } catch (error) {
+        console.error('Error loading game records:', error);
+      }
+    };
+
+    loadGameRecords();
+  }, [isRunGameStarted]); 
 
   useEffect(() => {
     const onChange = ({ window }) => {
@@ -40,6 +62,26 @@ const RunGameScreen = ({ setSelectedScreen, isRunGameStarted, setIsRunGameStarte
       dimensionListener.remove();
     };
   }, []);
+
+  useEffect(() => {
+    const scoreInterval = setInterval(() => {
+      if (isRunGameStarted) {
+        setRunScore(score => {
+          const increment = Math.floor(1 + startedSpeed * 0.25);
+          const newScore = score + increment;
+          return newScore;
+        });
+      }
+    }, 70);
+
+    return () => clearInterval(scoreInterval);
+  }, [isRunGameStarted]);
+
+  useEffect(() => {
+    if (runScore !== 0 && runScore % 100 === 0) {
+      setStartedSpeed(prev => prev + 1);
+    }
+  }, [runScore]);
 
   useEffect(() => {
     let gameTimerId = setInterval(() => {
@@ -56,7 +98,7 @@ const RunGameScreen = ({ setSelectedScreen, isRunGameStarted, setIsRunGameStarte
         }
       }
       setObstacleX(x => {
-        const newX = x - 5;
+        const newX = x - startedSpeed;
         if (newX < -obstacleSize) {
           const newSize = Math.random() < 0.5 ? dimensions.width * 0.15 : dimensions.width * 0.19;
           setObstacleSize(newSize);
@@ -67,21 +109,43 @@ const RunGameScreen = ({ setSelectedScreen, isRunGameStarted, setIsRunGameStarte
       const playerX = dimensions.width * 0.1;
       const playerWidth = dimensions.width * 0.25;
       if (
-        obstacleX < playerX + playerWidth - dimensions.width * 0.07 &&
-        obstacleX + obstacleSize - dimensions.width * 0.07 > playerX &&
-        playerBottom < 50
+        obstacleX < playerX + playerWidth - dimensions.width * 0.088 &&
+        obstacleX + obstacleSize - dimensions.width * 0.088 > playerX &&
+        playerBottom < dimensions.width * 0.1 //45
       ) {
-        if(isRunGameStarted) 
-          Alert.alert('Game Over');
+        if (isRunGameStarted) {
+          Alert.alert('Game Over', `Your score: ${runScore}`);
+          if (isVibrationEnabled) {
+            ReactNativeHapticFeedback.trigger("impactMedium", {
+              enableVibrateFallback: true,
+              ignoreAndroidSystemSettings: false,
+            });
+          }
+          if (runScore > 0) {
+            saveGameRecord(runScore);
+          }
+        }
         setIsRunGameStarted(false);
         setObstacleX(dimensions.width);
         setPlayerBottom(0);
         setIsJumping(false);
         setJumpVelocity(0);
+        setStartedSpeed(5);
       }
     }, 10);
     return () => clearInterval(gameTimerId);
   }, [isJumping, jumpVelocity, playerBottom, obstacleX, obstacleSize, dimensions.height, dimensions.width]);
+
+  const saveGameRecord = async (score) => {
+    try {
+      const existingRecords = await AsyncStorage.getItem('gameRecords');
+      const records = existingRecords ? JSON.parse(existingRecords) : [];
+      records.push(score);
+      await AsyncStorage.setItem('gameRecords', JSON.stringify(records));
+    } catch (error) {
+      console.error('Error saving game record:', error);
+    }
+  };
 
   return (
     <SafeAreaView style={{
@@ -96,8 +160,8 @@ const RunGameScreen = ({ setSelectedScreen, isRunGameStarted, setIsRunGameStarte
           <Image
             source={require('../assets/images/runGameImage.png')}
             style={{
-              width: dimensions.width * 0.8,
-              height: dimensions.height * 0.3,
+              width: dimensions.width * 0.64,
+              height: dimensions.height * 0.28,
               alignSelf: 'center',
             }}
             resizeMode='stretch'
@@ -117,6 +181,22 @@ const RunGameScreen = ({ setSelectedScreen, isRunGameStarted, setIsRunGameStarte
             {'\n'}Your character is racing forward, and your task is to jump in time, avoiding obstacles. ⏳ Small and large barriers will test your reflexes, while springs 🧘 will help you jump higher and reach platforms with valuable resources 💎. But be careful: traps may appear from above ⚠️, and one wrong move will lead to failure. 🎮
           </Text>
 
+          {gameRecors.length > 0 && (
+            <Text
+              style={{
+                fontFamily: fontPlusJakartaSansRegular,
+                color: 'white',
+                fontSize: dimensions.width * 0.043,
+                textAlign: 'left',
+                fontWeight: 500,
+                marginTop: dimensions.height * 0.03,
+                paddingHorizontal: dimensions.width * 0.05,
+                alignSelf: 'flex-start',
+              }}>
+              Best score: {bestRecord}
+            </Text>
+          )}
+
           <TouchableOpacity
             onPress={() => {
               setIsRunGameStarted(true);
@@ -124,6 +204,7 @@ const RunGameScreen = ({ setSelectedScreen, isRunGameStarted, setIsRunGameStarte
               setObstacleX(dimensions.width);
               setIsJumping(false);
               setJumpVelocity(0);
+              setRunScore(0);
             }}
             style={{
               width: dimensions.width * 0.8,
@@ -139,7 +220,7 @@ const RunGameScreen = ({ setSelectedScreen, isRunGameStarted, setIsRunGameStarte
             }}>
             <Text
               style={{
-                fontFamily: fontDMSansRegular,
+                fontFamily: fontPontanoSansRegular,
                 color: 'black',
                 fontSize: dimensions.width * 0.043,
                 textAlign: 'left',
@@ -153,6 +234,12 @@ const RunGameScreen = ({ setSelectedScreen, isRunGameStarted, setIsRunGameStarte
       ) : (
         <TouchableWithoutFeedback onPress={() => {
           if (!isJumping) {
+            if (isVibrationEnabled) {
+              ReactNativeHapticFeedback.trigger("impactLight", {
+                enableVibrateFallback: true,
+                ignoreAndroidSystemSettings: false,
+              });
+            }
             setIsJumping(true);
             setJumpVelocity(10);
           }
@@ -162,6 +249,19 @@ const RunGameScreen = ({ setSelectedScreen, isRunGameStarted, setIsRunGameStarte
             height: dimensions.height * 0.8,
             width: dimensions.width,
           }}>
+            <Text
+              style={{
+                fontFamily: fontPlusJakartaSansRegular,
+                color: 'white',
+                fontSize: dimensions.width * 0.061,
+                textAlign: 'center',
+                alignSelf: 'center',
+                fontWeight: 700,
+                position: 'absolute',
+                top: dimensions.height * 0.014,
+              }}>
+              {runScore}
+            </Text>
             <View style={{
               position: 'absolute',
               backgroundColor: 'white',
@@ -174,7 +274,7 @@ const RunGameScreen = ({ setSelectedScreen, isRunGameStarted, setIsRunGameStarte
               overflow: 'hidden',
               bottom: dimensions.height * 0.25,
             }}>
-              <Image 
+              <Image
                 source={require('../assets/images/playerImage.png')}
                 style={{
                   position: 'absolute',
@@ -185,7 +285,7 @@ const RunGameScreen = ({ setSelectedScreen, isRunGameStarted, setIsRunGameStarte
                 }}
                 resizeMode='contain'
               />
-              <Image 
+              <Image
                 source={require('../assets/images/triangleImage.png')}
                 style={{
                   position: 'absolute',
@@ -216,7 +316,7 @@ const RunGameScreen = ({ setSelectedScreen, isRunGameStarted, setIsRunGameStarte
               }}>
               <Text
                 style={{
-                  fontFamily: fontDMSansRegular,
+                  fontFamily: fontPontanoSansRegular,
                   color: 'black',
                   fontSize: dimensions.width * 0.043,
                   textAlign: 'left',
@@ -242,8 +342,6 @@ const RunGameScreen = ({ setSelectedScreen, isRunGameStarted, setIsRunGameStarte
           flex: 1,
           backgroundColor: '#050505',
         }}>
-
-
           <TouchableOpacity onPress={() => {
             setModalVisible(false);
           }}
@@ -272,8 +370,6 @@ const RunGameScreen = ({ setSelectedScreen, isRunGameStarted, setIsRunGameStarte
               Back
             </Text>
           </TouchableOpacity>
-
-
         </SafeAreaView>
       </Modal>
     </SafeAreaView>

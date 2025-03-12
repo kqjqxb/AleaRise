@@ -7,24 +7,20 @@ import {
   Image,
   SafeAreaView,
   Animated,
-  FlatList,
   ScrollView,
   Modal,
   Share,
 } from 'react-native';
-import { BlurView } from '@react-native-community/blur';
 
 import inspireData from '../components/inspireData';
 import achivePersonsData from '../components/achivePersonsData';
 import applyPersonsData from '../components/applyPersonsData';
 
-const fontDMSansRegular = 'DMSans18pt-Regular';
-
 const fontPlusJakartaSansRegular = 'PlusJakartaSans-Regular';
 const fontPontanoSansRegular = 'PontanoSans-Regular';
 
 
-const CardsScreen = ({ setSelectedScreen }) => {
+const CardsScreen = ({ setSelectedAleaScreen }) => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
   const [isPreviewWasVisible, setIsPreviewWasVisible] = useState(false);
   const [selectedPersonalityCategory, setSelectedPersonalityCategory] = useState('Inspire');
@@ -46,7 +42,6 @@ const CardsScreen = ({ setSelectedScreen }) => {
       dimensionListener.remove();
     };
   }, []);
-
 
   const getDataByPersonalityCategory = (PersonalityCategory) => {
     switch (PersonalityCategory) {
@@ -71,15 +66,6 @@ const CardsScreen = ({ setSelectedScreen }) => {
     }
   }, [data])
 
-
-
-  useEffect(() => {
-    console.log('Selected person:', selectedPerson);
-    console.log('data[currentIndex]:', data[currentIndex]);
-    console.log('data[currentIndex+1]:', data[currentIndex + 1]);
-
-  }, [selectedPerson])
-
   const ShareAleaInspireAndAchieveInfo = async (person) => {
     try {
       if (person) {
@@ -103,7 +89,6 @@ const CardsScreen = ({ setSelectedScreen }) => {
       console.error('Error share person:', error);
     }
   };
-
 
   return (
     <SafeAreaView style={{
@@ -162,7 +147,7 @@ const CardsScreen = ({ setSelectedScreen }) => {
             }}>
             <Text
               style={{
-                fontFamily: fontDMSansRegular,
+                fontFamily: fontPontanoSansRegular,
                 color: 'black',
                 fontSize: dimensions.width * 0.043,
                 textAlign: 'left',
@@ -222,7 +207,6 @@ const CardsScreen = ({ setSelectedScreen }) => {
             alignSelf: 'center',
             width: dimensions.width * 0.9,
           }}>
-
             <ScrollView
               horizontal
               pagingEnabled
@@ -343,10 +327,6 @@ const CardsScreen = ({ setSelectedScreen }) => {
             </ScrollView>
           </View>
 
-
-
-
-
           <TouchableOpacity onPress={() => {
             setModalVisible(true);
           }}
@@ -376,11 +356,8 @@ const CardsScreen = ({ setSelectedScreen }) => {
               Unveil Insights
             </Text>
           </TouchableOpacity>
-
-
         </SafeAreaView>
       )}
-
 
       <Modal
         animationType="slide"
@@ -398,7 +375,7 @@ const CardsScreen = ({ setSelectedScreen }) => {
             <>
               <Text
                 style={{
-                  fontFamily: fontDMSansRegular,
+                  fontFamily: fontPontanoSansRegular,
                   color: 'white',
                   fontSize: dimensions.width * 0.055,
                   textAlign: 'center',
@@ -423,7 +400,7 @@ const CardsScreen = ({ setSelectedScreen }) => {
 
               <Text
                 style={{
-                  fontFamily: fontDMSansRegular,
+                  fontFamily: fontPontanoSansRegular,
                   color: 'white',
                   fontSize: dimensions.width * 0.05,
                   textAlign: 'center',
@@ -476,7 +453,7 @@ const CardsScreen = ({ setSelectedScreen }) => {
             <>
               <Text
                 style={{
-                  fontFamily: fontDMSansRegular,
+                  fontFamily: fontPontanoSansRegular,
                   color: 'white',
                   fontSize: dimensions.width * 0.055,
                   textAlign: 'center',
@@ -490,7 +467,7 @@ const CardsScreen = ({ setSelectedScreen }) => {
 
               <Text
                 style={{
-                  fontFamily: fontDMSansRegular,
+                  fontFamily: fontPontanoSansRegular,
                   color: 'white',
                   fontSize: dimensions.width * 0.04,
                   textAlign: 'left',
@@ -545,7 +522,7 @@ const CardsScreen = ({ setSelectedScreen }) => {
             <>
               <Text
                 style={{
-                  fontFamily: fontDMSansRegular,
+                  fontFamily: fontPontanoSansRegular,
                   color: 'white',
                   fontSize: dimensions.width * 0.055,
                   textAlign: 'center',
@@ -559,7 +536,7 @@ const CardsScreen = ({ setSelectedScreen }) => {
 
               <Text
                 style={{
-                  fontFamily: fontDMSansRegular,
+                  fontFamily: fontPontanoSansRegular,
                   color: 'white',
                   fontSize: dimensions.width * 0.037,
                   textAlign: 'left',
@@ -612,7 +589,6 @@ const CardsScreen = ({ setSelectedScreen }) => {
             </>
           )}
 
-
           <TouchableOpacity onPress={() => {
             setModalVisible(false);
           }}
@@ -641,8 +617,6 @@ const CardsScreen = ({ setSelectedScreen }) => {
               Back
             </Text>
           </TouchableOpacity>
-
-
         </SafeAreaView>
       </Modal>
     </SafeAreaView>

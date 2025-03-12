@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -9,19 +9,17 @@ import {
   SafeAreaView,
   ScrollView,
   Modal,
-  Share,
   TextInput,
   Alert,
 } from 'react-native';
 import * as ImagePicker from 'react-native-image-picker';
 
-const fontDMSansRegular = 'DMSans18pt-Regular';
 const fontPlusJakartaSansRegular = 'PlusJakartaSans-Regular';
 const fontPontanoSansRegular = 'PontanoSans-Regular';
 
 const categoryButtons = ['💼 Career & Business', '💰 Finance & Wealth', '🏡 Housing & Comfort', '🚗 Transport & Tech', '🌍 Travel & Adventures', '💪 Health & Fitness', '📚 Education & Growth', '💖 Relationships & Family', '🎨 Creativity & Hobbies', '🎁 Wishes & Dreams']
 
-const DreamBoardScreen = ({ setSelectedScreen, selectedScreen }) => {
+const DreamBoardScreen = ({ setSelectedAleaScreen, selectedAleaScreen }) => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
   const [selectedDreamCategory, setSelectedDreamCategory] = useState('');
   const [dreamImage, setDreamImage] = useState('');
@@ -139,7 +137,6 @@ const DreamBoardScreen = ({ setSelectedScreen, selectedScreen }) => {
     }
   };
 
-
   const handleGoalImagePicker = () => {
     ImagePicker.launchImageLibrary({ mediaType: 'photo' }, (response) => {
       if (response.didCancel) {
@@ -151,7 +148,6 @@ const DreamBoardScreen = ({ setSelectedScreen, selectedScreen }) => {
       }
     });
   };
-
 
   const handleDeleteAleaRiseImage = (typeOfImage) => {
     Alert.alert(
@@ -176,7 +172,6 @@ const DreamBoardScreen = ({ setSelectedScreen, selectedScreen }) => {
       ]
     );
   };
-
 
   return (
     <SafeAreaView style={{
@@ -210,7 +205,6 @@ const DreamBoardScreen = ({ setSelectedScreen, selectedScreen }) => {
             🌟 Create your dream board and turn your desires into reality! 🌟{'\n'}
 
             {'\n'}Visualization helps you achieve your goals faster! Add inspiring images, quotes, and ideas, organize your dreams into categories, and keep them in sight every day. Career, travel, finances, health – everything that matters to you, all in one place. Start your journey toward your dream now! 🚀✨
-
           </Text>
 
           <TouchableOpacity
@@ -231,7 +225,7 @@ const DreamBoardScreen = ({ setSelectedScreen, selectedScreen }) => {
             }}>
             <Text
               style={{
-                fontFamily: fontDMSansRegular,
+                fontFamily: fontPontanoSansRegular,
                 color: 'black',
                 fontSize: dimensions.width * 0.043,
                 textAlign: 'left',
@@ -264,7 +258,7 @@ const DreamBoardScreen = ({ setSelectedScreen, selectedScreen }) => {
                 }}>
                 <Text
                   style={{
-                    fontFamily: fontDMSansRegular,
+                    fontFamily: fontPontanoSansRegular,
                     color: 'white',
                     fontSize: dimensions.width * 0.048,
                     marginBottom: dimensions.height * 0.01,
@@ -272,7 +266,6 @@ const DreamBoardScreen = ({ setSelectedScreen, selectedScreen }) => {
                     alignSelf: 'center',
                     maxWidth: dimensions.width * 0.55,
                     fontWeight: 700,
-
                   }}>
                   {dream.dreamCategory}
                 </Text>
@@ -309,7 +302,7 @@ const DreamBoardScreen = ({ setSelectedScreen, selectedScreen }) => {
                   }}>
                     <Text
                       style={{
-                        fontFamily: fontDMSansRegular,
+                        fontFamily: fontPontanoSansRegular,
                         color: 'white',
                         fontSize: dimensions.width * 0.043,
                         textAlign: 'center',
@@ -322,7 +315,7 @@ const DreamBoardScreen = ({ setSelectedScreen, selectedScreen }) => {
 
                     <Text
                       style={{
-                        fontFamily: fontDMSansRegular,
+                        fontFamily: fontPontanoSansRegular,
                         color: 'white',
                         fontSize: dimensions.width * 0.037,
                         textAlign: 'left',
@@ -342,7 +335,6 @@ const DreamBoardScreen = ({ setSelectedScreen, selectedScreen }) => {
                   alignSelf: 'center',
                   marginVertical: dimensions.height * 0.025,
                 }}></View>
-
 
                 <View style={{
                   flexDirection: 'row',
@@ -369,7 +361,7 @@ const DreamBoardScreen = ({ setSelectedScreen, selectedScreen }) => {
                   }}>
                     <Text
                       style={{
-                        fontFamily: fontDMSansRegular,
+                        fontFamily: fontPontanoSansRegular,
                         color: 'white',
                         fontSize: dimensions.width * 0.043,
                         textAlign: 'center',
@@ -382,7 +374,7 @@ const DreamBoardScreen = ({ setSelectedScreen, selectedScreen }) => {
 
                     <Text
                       style={{
-                        fontFamily: fontDMSansRegular,
+                        fontFamily: fontPontanoSansRegular,
                         color: 'white',
                         fontSize: dimensions.width * 0.037,
                         textAlign: 'left',
@@ -601,7 +593,6 @@ const DreamBoardScreen = ({ setSelectedScreen, selectedScreen }) => {
           )}
         </SafeAreaView>
       )}
-
 
       <Modal
         animationType="slide"
@@ -1023,8 +1014,6 @@ const DreamBoardScreen = ({ setSelectedScreen, selectedScreen }) => {
               Back
             </Text>
           </TouchableOpacity>
-
-
         </SafeAreaView>
       </Modal>
     </SafeAreaView>

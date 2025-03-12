@@ -35,38 +35,11 @@
 	<string/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Cormorant-Bold.ttf</string>
-		<string>Cormorant-Italic.ttf</string>
-		<string>Cormorant-Medium.ttf</string>
-		<string>Cormorant-Regular.ttf</string>
-		<string>Cormorant-SemiBold.ttf</string>
-		<string>DMSans18pt-Black.ttf</string>
-		<string>DMSans18pt-Bold.ttf</string>
-		<string>DMSans18pt-Medium.ttf</string>
-		<string>DMSans18pt-Regular.ttf</string>
-		<string>Montserrat-Bold.ttf</string>
-		<string>Montserrat-Italic.ttf</string>
-		<string>Montserrat-Medium.ttf</string>
-		<string>Montserrat-Regular.ttf</string>
-		<string>Montserrat-SemiBold.ttf</string>
-		<string>MontserratAlternates-Black.ttf</string>
-		<string>MontserratAlternates-Bold.ttf</string>
-		<string>MontserratAlternates-Regular.ttf</string>
 		<string>PontanoSans-Bold.ttf</string>
 		<string>PontanoSans-Light.ttf</string>
 		<string>PontanoSans-Medium.ttf</string>
 		<string>PontanoSans-Regular.ttf</string>
 		<string>PontanoSans-SemiBold.ttf</string>
-		<string>Poppins-Black.ttf</string>
-		<string>Poppins-Bold.ttf</string>
-		<string>Poppins-Italic.ttf</string>
-		<string>Poppins-Medium.ttf</string>
-		<string>Poppins-Regular.ttf</string>
-		<string>Poppins-SemiBold.ttf</string>
-		<string>Poppins-Thin.ttf</string>
-		<string>SFProText-Regular.ttf</string>
-		<string>KumbhSans-Black.ttf</string>
-		<string>KumbhSans-Regular.ttf</string>
 		<string>PlusJakartaSans-Bold.ttf</string>
 		<string>PlusJakartaSans-ExtraBold.ttf</string>
 		<string>PlusJakartaSans-Regular.ttf</string>

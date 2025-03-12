@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -10,8 +10,6 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SettingsScreen from './SettingsScreen';
 import { ScrollView } from 'react-native-gesture-handler';
-import ArticlesScreen from './ArticlesScreen';
-import PlayerScreen from './PlayerScreen';
 import CardsScreen from './CardsScreen';
 import LoadingAleaScreen from './LoadingAleaScreen';
 import aleaChallengesData from '../components/aleaChallengesData';
@@ -19,8 +17,7 @@ import DreamBoardScreen from './DreamBoardScreen';
 import RunGameScreen from './RunGameScreen';
 
 const fontMontserratRegular = 'Montserrat-Regular';
-const fontDMSansRegular = 'DMSans18pt-Regular';
-const fontDMSansBlack = 'DMSans18pt-Black';
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
 const fontPlusJakartaSansRegular = 'PlusJakartaSans-Regular';
 const fontPontanoSansRegular = 'PontanoSans-Regular';
@@ -53,17 +50,17 @@ const bottomBtns = [
   },
 ]
 
-const formatSkyMusicDate = (date) => {
+const formatAleaRiseDate = (date) => {
   if (!date) return 'Date';
   const day = String(date.getDate()).padStart(2, '0');
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const year = date.getFullYear();
-  return `${day}.${month}.${year}`;
+  return `${day}/${month}/${year}`;
 };
 
 const HomeScreen = () => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
-  const [selectedScreen, setSelectedScreen] = useState('Home');
+  const [selectedAleaScreen, setSelectedAleaScreen] = useState('Home');
 
   const [isRunGameStarted, setIsRunGameStarted] = useState(false);
 
@@ -74,12 +71,13 @@ const HomeScreen = () => {
   const [selectedChallengeCategory, setSelectedChallengeCategory] = useState('');
   const [currentChallenge, setCurrentChallenge] = useState(null);
   const [elapsedTime, setElapsedTime] = useState('00:00:00');
-  const [isNotificationEnabled, setNotificationEnabled] = useState(false);
+  const [isVibrationEnabled, setVibrationEnabled] = useState(false);
+  const [growthJournal, setGrowthJournal] = useState([]);
 
   const loadAleaRiseSettings = async () => {
     try {
-      const notificationAleaRiseValue = await AsyncStorage.getItem('isNotificationEnabled');
-      if (notificationAleaRiseValue !== null) setNotificationEnabled(JSON.parse(notificationAleaRiseValue));
+      const notificationAleaRiseValue = await AsyncStorage.getItem('isVibrationEnabled');
+      if (notificationAleaRiseValue !== null) setVibrationEnabled(JSON.parse(notificationAleaRiseValue));
     } catch (error) {
       console.error("Error loading settings:", error);
     }
@@ -87,7 +85,7 @@ const HomeScreen = () => {
 
   useEffect(() => {
     loadAleaRiseSettings();
-  }, [isNotificationEnabled, selectedScreen]);
+  }, [isVibrationEnabled, selectedAleaScreen]);
 
   const saveCurrentChallenge = async (challenge) => {
     try {
@@ -96,6 +94,13 @@ const HomeScreen = () => {
       console.error('Error saving currentChallenge:', error);
     }
   };
+
+  useEffect(() => {
+    setIsBeginWasVisible(false);
+    setIsDifficultWasVisible(false);
+    setSelectedDifficulty('');
+    setSelectedChallengeCategory('');
+  }, [selectedAleaScreen]);
 
   useEffect(() => {
     const loadCurrentChallenge = async () => {
@@ -111,11 +116,7 @@ const HomeScreen = () => {
 
     loadCurrentChallenge();
 
-  }, [selectedScreen]);
-
-  useEffect(() => {
-    console.log('currentChallenge:', currentChallenge);
-  }, [currentChallenge]);
+  }, [selectedAleaScreen]);
 
   useEffect(() => {
     let interval;
@@ -129,45 +130,99 @@ const HomeScreen = () => {
     }
     return () => clearInterval(interval);
   }, [currentChallenge, elapsedTime]);
-  
+
   const handleAcceptChallenge = async (index) => {
+    if (isVibrationEnabled) {
+      ReactNativeHapticFeedback.trigger("impactLight", {
+        enableVibrateFallback: true,
+        ignoreAndroidSystemSettings: false,
+      });
+    }
     const updatedChallenges = [...currentChallenge.challenges];
-    if (updatedChallenges[index].status === 'done') {
-      updatedChallenges[index].status = 'accept';
-      updatedChallenges[index].startTime = new Date().toISOString();
-      setElapsedTime('00:00:00'); // Reset elapsed time for new challenge
-    } else {
+
+    if (updatedChallenges[index].status !== 'done') {
       updatedChallenges[index].status = 'done';
       updatedChallenges[index].endTime = new Date().toISOString();
       updatedChallenges[index].elapsedTime = getElapsedTime(updatedChallenges[index].startTime);
     }
-  
+
+    const activeChallenge = updatedChallenges.find(ch => ch.status === 'accept');
+    if (!activeChallenge) {
+      const nextIndex = updatedChallenges.findIndex((ch, i) => i > index && ch.status !== 'done');
+      if (nextIndex !== -1) {
+        updatedChallenges[nextIndex].status = 'accept';
+        updatedChallenges[nextIndex].startTime = new Date().toISOString();
+        setElapsedTime('00:00:00');
+      } else {
+        const firstNotDone = updatedChallenges.findIndex(ch => ch.status !== 'done');
+        if (firstNotDone !== -1) {
+          updatedChallenges[firstNotDone].status = 'accept';
+          updatedChallenges[firstNotDone].startTime = new Date().toISOString();
+          setElapsedTime('00:00:00');
+        }
+      }
+    }
+
     const updatedCurrentChallenge = {
       ...currentChallenge,
       challenges: updatedChallenges,
     };
-  
+
     setCurrentChallenge(updatedCurrentChallenge);
     await saveCurrentChallenge(updatedCurrentChallenge);
-  
-    // Check if all challenges are done
+
     if (updatedChallenges.every(challenge => challenge.status === 'done')) {
+      const completedEntry = {
+        challenges: updatedChallenges,
+        allCompletedDate: new Date().toISOString(),
+      };
+
+      try {
+        const storedJournal = await AsyncStorage.getItem('growthJournal');
+        const growthJournal = storedJournal ? JSON.parse(storedJournal) : [];
+        growthJournal.unshift(completedEntry);
+        await AsyncStorage.setItem('growthJournal', JSON.stringify(growthJournal));
+        loadGrowthJournal();
+        setCurrentChallenge(null);
+        setIsBeginWasVisible(false);
+        setIsDifficultWasVisible(false);
+        setSelectedDifficulty('');
+        setSelectedChallengeCategory('');
+        setElapsedTime('00:00:00');
+      } catch (error) {
+        console.error('Error saving to growthJournal:', error);
+      }
+
       await AsyncStorage.removeItem('currentChallenge');
       setCurrentChallenge(null);
     }
   };
-  
+
+  const loadGrowthJournal = async () => {
+    try {
+      const storedJournal = await AsyncStorage.getItem('growthJournal');
+      const parsedJournal = storedJournal ? JSON.parse(storedJournal) : [];
+      setGrowthJournal(parsedJournal);
+    } catch (error) {
+      console.error('Error loading growthJournal:', error);
+    }
+  };
+
+  useEffect(() => {
+    loadGrowthJournal();
+  }, []);
+
   const getElapsedTime = (startTime) => {
     if (!startTime) return '00:00:00';
-  
+
     const start = new Date(startTime);
     const now = new Date();
     const diff = now - start;
-  
+
     const hours = Math.floor(diff / (1000 * 60 * 60)).toString().padStart(2, '0');
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
     const seconds = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
-  
+
     return `${hours}:${minutes}:${seconds}`;
   };
 
@@ -178,7 +233,7 @@ const HomeScreen = () => {
       height: dimensions.height,
       width: dimensions.width,
     }}>
-      {selectedScreen === 'Home' ? (
+      {selectedAleaScreen === 'Home' ? (
         <SafeAreaView style={{
           flex: 1,
           paddingHorizontal: dimensions.width * 0.05,
@@ -428,6 +483,7 @@ const HomeScreen = () => {
                           marginBottom: dimensions.height * 0.025,
                         }}>
                           <TouchableOpacity
+                            disabled={challenge.status === 'done'}
                             onPress={() => handleAcceptChallenge(index)}
                             style={{
                               width: dimensions.width * 0.43,
@@ -455,7 +511,7 @@ const HomeScreen = () => {
                               0.43,
                             backgroundColor: 'white',
                             borderRadius: dimensions.width * 0.025,
-                            borderColor: '#FB8A8A',
+                            borderColor: challenge.status === 'done' ? '#9FE7B3' : '#FB8A8A',
                             borderWidth: dimensions.width * 0.01,
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -475,7 +531,10 @@ const HomeScreen = () => {
                           </View>
                         </View>
 
-                        <TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={() => handleAcceptChallenge(index)}
+                          disabled={challenge.status === 'done'}
+                        >
                           <Image
                             source={require('../assets/icons/completeWithLineIcon.png')}
                             style={{
@@ -491,12 +550,119 @@ const HomeScreen = () => {
                     ) : null
                   ))}
                 </ScrollView>
-
               </>
             )
           ) : (
             <>
-              {/* {growth journal} */}
+              <Text
+                style={{
+                  fontFamily: fontPlusJakartaSansRegular,
+                  color: 'white',
+                  fontSize: dimensions.width * 0.05,
+                  textAlign: 'left',
+                  alignSelf: 'flex-start',
+                  fontWeight: 700,
+                  marginTop: dimensions.height * 0.025,
+                  paddingHorizontal: dimensions.width * 0.05,
+                  paddingBottom: dimensions.height * 0.01,
+                }}>
+                Your done challenges:
+              </Text>
+
+              {growthJournal.length === 0 && (
+                <Text
+                  style={{
+                    fontFamily: fontPlusJakartaSansRegular,
+                    color: 'white',
+                    fontSize: dimensions.width * 0.07,
+                    textAlign: 'center',
+                    alignSelf: 'center',
+                    fontWeight: 700,
+                    marginTop: dimensions.height * 0.25,
+                    paddingHorizontal: dimensions.width * 0.05,
+                  }}>
+                  You haven't completed any challenges yet.
+                </Text>
+              )}
+              <ScrollView showsVerticalScrollIndicator={false}
+                contentContainerStyle={{
+                  paddingBottom: dimensions.height * 0.16,
+                  alignSelf: 'center'
+                }}>
+                {growthJournal.map((growth, index) => (
+                  <View key={index} style={{
+                    width: dimensions.width * 0.9,
+                    alignSelf: 'center',
+                    marginTop: index !== 0 ? dimensions.height * 0.025 : dimensions.height * 0.016,
+                    borderRadius: dimensions.width * 0.025,
+                    borderColor: 'white',
+                    borderWidth: dimensions.width * 0.003,
+                    paddingVertical: dimensions.height * 0.023,
+                  }}>
+                    <Text
+                      style={{
+                        fontFamily: fontPlusJakartaSansRegular,
+                        color: 'white',
+                        fontSize: dimensions.width * 0.05,
+                        textAlign: 'center',
+                        alignSelf: 'center',
+                        fontWeight: 700,
+                        marginBottom: dimensions.height * 0.005,
+                      }}>
+                      {growth.allCompletedDate ? formatAleaRiseDate(new Date(growth.allCompletedDate)) : 'dd/mm/yyyy'}
+                    </Text>
+
+                    {growth.challenges.map((grChallenge, index) => (
+                      <View key={grChallenge.id} style={{
+                        alignSelf: 'center',
+                        marginTop: dimensions.height * 0.021,
+                        width: dimensions.width * 0.8,
+                        borderBottomColor: 'white',
+                        borderBottomWidth: grChallenge.id !== 3 ? dimensions.width * 0.001 : 0,
+                        paddingBottom: grChallenge.id !== 3 ? dimensions.height * 0.025 : 0,
+                      }}>
+                        <Text
+                          style={{
+                            fontFamily: fontPlusJakartaSansRegular,
+                            color: 'white',
+                            fontSize: dimensions.width * 0.04,
+                            textAlign: 'left',
+                            alignSelf: 'flex-start',
+                            fontWeight: 500,
+                            maxWidth: dimensions.width * 0.9,
+                          }}>
+                          {grChallenge.title}
+                        </Text>
+
+                        <View style={{
+                          width: dimensions.width * 0.43,
+                          backgroundColor: 'white',
+                          borderRadius: dimensions.width * 0.025,
+                          borderColor: '#FB8A8A',
+                          borderWidth: dimensions.width * 0.01,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          height: dimensions.height * 0.05,
+                          alignSelf: 'center',
+                          marginTop: dimensions.height * 0.019,
+                        }}>
+                          <Text
+                            style={{
+                              fontFamily: fontPlusJakartaSansRegular,
+                              color: 'black',
+                              fontSize: dimensions.width * 0.035,
+                              textAlign: 'center',
+                              fontWeight: 600,
+                              maxWidth: dimensions.width * 0.7,
+                            }}>
+                            {grChallenge.elapsedTime}
+                          </Text>
+                        </View>
+                      </View>
+                    ))}
+                  </View>
+                ))}
+              </ScrollView>
             </>
           )}
 
@@ -509,11 +675,21 @@ const HomeScreen = () => {
                 } else if (!currentChallenge && !isDifficultWasVisible && isBeginWasVisible) {
                   setIsDifficultWasVisible(true);
                 } else {
-                  const challenge = aleaChallengesData.find(item => item.categoty === selectedChallengeCategory)?.difficults[selectedDifficulty.toLowerCase()];
-                  if (challenge) {
-                    const challengeWithPoints = { challenges: challenge, completedPoints: [] };
+                  const challengeSource = aleaChallengesData.find(item => item.categoty === selectedChallengeCategory)?.difficults[selectedDifficulty.toLowerCase()];
+                  if (challengeSource) {
+
+                    const challenge = JSON.parse(JSON.stringify(challengeSource));
+
+                    challenge[0].status = 'accept';
+                    challenge[0].startTime = new Date().toISOString();
+                    const challengeWithPoints = {
+                      challenges: challenge,
+                      completedPoints: [],
+                      selectedDifficulty: selectedDifficulty,
+                      selectedChallengeCategory: selectedChallengeCategory
+                    };
                     setCurrentChallenge(challengeWithPoints);
-                    saveCurrentChallenge(challengeWithPoints);
+                    setElapsedTime('00:00:00');
                   }
                 }
               }}
@@ -531,7 +707,7 @@ const HomeScreen = () => {
               }}>
               <Text
                 style={{
-                  fontFamily: fontDMSansRegular,
+                  fontFamily: fontPontanoSansRegular,
                   color: 'black',
                   fontSize: dimensions.width * 0.043,
                   textAlign: 'left',
@@ -543,21 +719,19 @@ const HomeScreen = () => {
             </TouchableOpacity>
           )}
         </SafeAreaView>
-      ) : selectedScreen === 'Settings' ? (
-        <SettingsScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} isNotificationEnabled={isNotificationEnabled} setNotificationEnabled={setNotificationEnabled}/>
-      ) : selectedScreen === 'RunGame' ? (
-        <RunGameScreen setSelectedScreen={setSelectedScreen} isRunGameStarted={isRunGameStarted} setIsRunGameStarted={setIsRunGameStarted} />
-      ) : selectedScreen === 'DreamBoard' ? (
-        <DreamBoardScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} />
-      ) : selectedScreen === 'Cards' ? (
-        <CardsScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} />
-      ) : selectedScreen === 'LoadingScreen' ? (
-        <LoadingAleaScreen setSelectedScreen={setSelectedScreen} />
+      ) : selectedAleaScreen === 'Settings' ? (
+        <SettingsScreen setSelectedAleaScreen={setSelectedAleaScreen} selectedAleaScreen={selectedAleaScreen} isVibrationEnabled={isVibrationEnabled} setVibrationEnabled={setVibrationEnabled} />
+      ) : selectedAleaScreen === 'RunGame' ? (
+        <RunGameScreen setSelectedAleaScreen={setSelectedAleaScreen} isRunGameStarted={isRunGameStarted} setIsRunGameStarted={setIsRunGameStarted} isVibrationEnabled={isVibrationEnabled} />
+      ) : selectedAleaScreen === 'DreamBoard' ? (
+        <DreamBoardScreen setSelectedAleaScreen={setSelectedAleaScreen} selectedAleaScreen={selectedAleaScreen} />
+      ) : selectedAleaScreen === 'Cards' ? (
+        <CardsScreen setSelectedAleaScreen={setSelectedAleaScreen} selectedAleaScreen={selectedAleaScreen} />
+      ) : selectedAleaScreen === 'LoadingScreen' ? (
+        <LoadingAleaScreen setSelectedAleaScreen={setSelectedAleaScreen} />
       ) : null}
 
-      {selectedScreen !== 'BubblesGame' &&
-        selectedScreen !== 'LocDetails' &&
-        !(selectedScreen === 'RunGame' && isRunGameStarted) && (
+      {!(selectedAleaScreen === 'RunGame' && isRunGameStarted) && (
           <View
             style={{
               position: 'absolute',
@@ -577,11 +751,11 @@ const HomeScreen = () => {
             {bottomBtns.map((button, index) => (
               <TouchableOpacity
                 key={button.id}
-                onPress={() => setSelectedScreen(button.screen)}
+                onPress={() => setSelectedAleaScreen(button.screen)}
                 style={{
                   padding: dimensions.height * 0.01,
                   alignItems: 'center',
-                  opacity: selectedScreen === button.screen ? 1 : 0.37,
+                  opacity: selectedAleaScreen === button.screen ? 1 : 0.37,
                 }}
               >
                 <Image
@@ -596,7 +770,7 @@ const HomeScreen = () => {
                 <Text
                   style={{
                     fontFamily: fontMontserratRegular,
-                    color: selectedScreen === button.screen ? '#B38C31' : '#656565',
+                    color: selectedAleaScreen === button.screen ? '#B38C31' : '#656565',
                     fontSize: dimensions.width * 0.03,
                     textAlign: 'center',
                     fontWeight: 300,

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import {  Text, TouchableOpacity, Dimensions, Image, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-
 const fontPlusJakartaSansRegular = 'PlusJakartaSans-Regular';
 const fontPontanoSansRegular = 'PontanoSans-Regular';
 
@@ -28,7 +27,6 @@ const OnboardingScreen = () => {
     <SafeAreaView
       style={{ flex: 1, backgroundColor: '#050505', height: dimensions.height }}
     >
-
       <Image
         resizeMode='contain'
         style={{
@@ -60,7 +58,6 @@ const OnboardingScreen = () => {
         🚀 Alea Rise – Unlock new possibilities every day!
       </Text>
 
-
       <TouchableOpacity
         onPress={() => {
           navigation.replace('LoadingAleaScreen');
@@ -87,7 +84,6 @@ const OnboardingScreen = () => {
           Rise On!
         </Text>
       </TouchableOpacity>
-
     </SafeAreaView>
   );
 };

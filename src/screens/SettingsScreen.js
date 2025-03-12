@@ -183,7 +183,8 @@ const SettingsScreen = ({ setSelectedAleaScreen, isVibrationEnabled, setVibratio
                   width: '44%',
                 }}
                 onPress={() => {
-                  setModalVisible(false);
+                  // setModalVisible(false);
+                  cancel();
                 }}
               >
                 <Text style={{
@@ -211,8 +212,9 @@ const SettingsScreen = ({ setSelectedAleaScreen, isVibrationEnabled, setVibratio
                   width: '44%',
                 }}
                 onPress={() => {
-                  setModalVisible(false);
-                  clearAsyncStorage();
+                  // setModalVisible(false);
+                  // clearAsyncStorage();
+                  resetResetResetReset();
                 }}
               >
                 <Text style={{

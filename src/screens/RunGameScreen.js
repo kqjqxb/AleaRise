@@ -300,7 +300,8 @@ const RunGameScreen = ({ setSelectedAleaScreen, isRunGameStarted, setIsRunGameSt
 
             <TouchableOpacity
               onPress={() => {
-                setIsRunGameStarted(false);
+                // setIsRunGameStarted(false);
+                endRunGame();
               }}
               style={{
                 width: dimensions.width * 0.8,
@@ -329,49 +330,6 @@ const RunGameScreen = ({ setSelectedAleaScreen, isRunGameStarted, setIsRunGameSt
           </SafeAreaView>
         </TouchableWithoutFeedback>
       )}
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <SafeAreaView style={{
-          flex: 1,
-          backgroundColor: '#050505',
-        }}>
-          <TouchableOpacity onPress={() => {
-            setModalVisible(false);
-          }}
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: dimensions.width * 0.025,
-              borderColor: 'white',
-              width: dimensions.width * 0.8,
-              borderWidth: dimensions.width * 0.003,
-              backgroundColor: 'white',
-              alignSelf: 'center',
-              position: 'absolute',
-              bottom: dimensions.height * 0.08,
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: fontPlusJakartaSansRegular,
-                color: 'black',
-                fontSize: dimensions.width * 0.043,
-                textAlign: 'center',
-                fontWeight: 600,
-                paddingVertical: dimensions.height * 0.016,
-              }}>
-              Back
-            </Text>
-          </TouchableOpacity>
-        </SafeAreaView>
-      </Modal>
     </SafeAreaView>
   );
 };

@@ -565,7 +565,8 @@ const DreamBoardScreen = ({ setSelectedAleaScreen, selectedAleaScreen }) => {
           {!isCategoriesVisible && (
             <TouchableOpacity
               onPress={() => {
-                setAddDreamVisible(false);
+                // setAddDreamVisible(false);
+                closeDreamBoard();
               }}
               style={{
                 width: dimensions.width * 0.9,

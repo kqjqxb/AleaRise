@@ -31,8 +31,10 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<key>NSCameraUsageDescription</key>
+<string>We need access to your camera to take photos.</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>We need access to your photo library to select images for your dreams and goals.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>PontanoSans-Bold.ttf</string>

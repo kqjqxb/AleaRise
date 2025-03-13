@@ -300,8 +300,7 @@ const RunGameScreen = ({ setSelectedAleaScreen, isRunGameStarted, setIsRunGameSt
 
             <TouchableOpacity
               onPress={() => {
-                // setIsRunGameStarted(false);
-                endRunGame();
+                setIsRunGameStarted(false);
               }}
               style={{
                 width: dimensions.width * 0.8,

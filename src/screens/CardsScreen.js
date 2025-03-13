@@ -593,8 +593,7 @@ const CardsScreen = ({ setSelectedAleaScreen }) => {
           )}
 
           <TouchableOpacity onPress={() => {
-            // setModalVisible(false);
-            closeCardModal();
+            setModalVisible(false);
           }}
             style={{
               alignItems: 'center',

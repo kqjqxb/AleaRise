@@ -7,9 +7,9 @@ export default [
     },
     {
         id: 2,
-        person: 'Steve Jobs',
-        image: require('../assets/images/personalities/pers1.png'),
-        text: 'Your time is limited, so don’t waste it living someone else’s life',
+        person: 'Dwayne Johnson',
+        image: require('../assets/images/personalities/pers1_gray.png'),
+        text: 'Find a place inside where there\'s joy, and the joy will burn out the pain.',
     },
     {
         id: 3,

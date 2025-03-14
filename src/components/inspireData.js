@@ -7,9 +7,9 @@ export default [
     },
     {
         id: 2,
-        person: 'Dwayne Johnson',
-        image: require('../assets/images/personalities/pers1_gray.png'),
-        text: 'Find a place inside where there\'s joy, and the joy will burn out the pain.',
+        person: 'Ferruccio Lamborghini',
+        image: require('../assets/images/personalities/pers1.png'),
+        text: '“A normal chap, a man who likes creating things. A good worker in the morning, and a man who likes enjoying himself in the afternoon.”',
     },
     {
         id: 3,

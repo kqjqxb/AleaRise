@@ -11,6 +11,8 @@ import {
   Modal,
   TextInput,
   Alert,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import * as ImagePicker from 'react-native-image-picker';
 
@@ -602,419 +604,422 @@ const DreamBoardScreen = ({ setSelectedAleaScreen, selectedAleaScreen }) => {
           setModalVisible(!modalVisible);
         }}
       >
-        <SafeAreaView style={{
-          flex: 1,
-          backgroundColor: '#050505',
-        }}>
-          <View style={{
-            height: dimensions.height * 0.77,
-            width: dimensions.width * 0.9,
-            borderColor: 'white',
-            borderWidth: dimensions.width * 0.005,
-            borderRadius: dimensions.width * 0.025,
-            alignSelf: 'center',
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+
+          <SafeAreaView style={{
+            flex: 1,
+            backgroundColor: '#050505',
           }}>
-            <Text
-              style={{
-                fontFamily: fontPlusJakartaSansRegular,
-                color: 'white',
-                fontSize: dimensions.width * 0.05,
-                textAlign: 'center',
-                alignSelf: 'center',
-                marginTop: dimensions.height * 0.03,
-                fontWeight: 600,
-              }}>
-              {selectedDreamCategory}
-            </Text>
-
-            {!isDreamBoardPickWasVisible ? (
-              <>
-                <Text
-                  style={{
-                    fontFamily: fontPlusJakartaSansRegular,
-                    color: 'white',
-                    fontSize: dimensions.width * 0.04,
-                    textAlign: 'center',
-                    alignSelf: 'center',
-                    marginTop: dimensions.height * 0.03,
-                    fontWeight: 500,
-                  }}>
-                  Your Dream
-                </Text>
-
-                {dreamImage === '' || !dreamImage ? (
-                  <TouchableOpacity
-                    onPress={() => handleDreamImagePicker()}
-                    style={{
-                      borderRadius: dimensions.width * 0.025,
-                      borderColor: 'white',
-                      borderWidth: dimensions.width * 0.005,
-                      width: dimensions.width * 0.4,
-                      height: dimensions.width * 0.4,
-                      alignSelf: 'center',
-                      marginTop: dimensions.height * 0.01,
-                    }}>
-
-                    <View style={{
-                      width: dimensions.width * 0.4,
-                      height: dimensions.width * 0.1,
-                      backgroundColor: 'white',
-                      borderRadius: dimensions.width * 0.025,
-                      position: 'absolute',
-                      bottom: 0,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      alignSelf: 'center',
-                      flexDirection: 'row',
-                    }}>
-                      <Text
-                        style={{
-                          fontFamily: fontPlusJakartaSansRegular,
-                          color: 'black',
-                          fontSize: dimensions.width * 0.04,
-                          textAlign: 'center',
-                          alignSelf: 'center',
-
-                          fontWeight: 500,
-                        }}>
-                        Add photo
-                      </Text>
-
-                      <Image
-                        source={require('../assets/icons/plusInSquareIcon.png')}
-                        style={{
-                          width: dimensions.width * 0.05,
-                          height: dimensions.width * 0.05,
-                          marginLeft: dimensions.width * 0.02,
-                        }}
-                        resizeMode='contain'
-                      />
-                    </View>
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    onPress={() => {
-                      handleDeleteAleaRiseImage('dream');
-                    }}
-                    style={{
-                      borderRadius: dimensions.width * 0.025,
-                      borderColor: 'white',
-                      borderWidth: dimensions.width * 0.005,
-                      width: dimensions.width * 0.4,
-                      height: dimensions.width * 0.4,
-                      alignSelf: 'center',
-                      marginTop: dimensions.height * 0.01,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    <Image
-                      source={{ uri: dreamImage }}
-                      style={{
-                        width: dimensions.width * 0.39,
-                        height: dimensions.width * 0.39,
-                        borderRadius: dimensions.width * 0.025,
-                        alignSelf: 'center',
-                      }}
-                      resizeMode='stretch'
-                    />
-
-                    <View style={{
-                      width: dimensions.width * 0.4,
-                      height: dimensions.width * 0.1,
-                      backgroundColor: 'white',
-                      borderRadius: dimensions.width * 0.025,
-                      position: 'absolute',
-                      bottom: 0,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      alignSelf: 'center',
-                      flexDirection: 'row',
-                    }}>
-                      <Text
-                        style={{
-                          fontFamily: fontPlusJakartaSansRegular,
-                          color: 'black',
-                          fontSize: dimensions.width * 0.04,
-                          textAlign: 'center',
-                          alignSelf: 'center',
-
-                          fontWeight: 500,
-                        }}>
-                        Delete photo
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                )}
-
-                <TextInput
-                  placeholder="Type your dream here"
-                  value={dreamText}
-                  onChangeText={setDreamText}
-                  placeholderTextColor="rgba(237, 237, 237, 0.85)"
-                  placeholderTextSize={dimensions.width * 0.03}
-                  multiline={true}
-                  textAlignVertical="top"
-                  style={{
-                    maxWidth: dimensions.width * 0.8,
-                    padding: dimensions.width * 0.03,
-                    fontFamily: fontPontanoSansRegular,
-                    fontSize: dreamText.length > 0 ? dimensions.width * 0.043 : dimensions.width * 0.037,
-                    color: 'white',
-                    height: dimensions.height * 0.14,
-                    alignSelf: 'center',
-                    width: dimensions.width * 0.8,
-                    borderColor: 'white',
-                    borderWidth: dimensions.width * 0.005,
-                    borderRadius: dimensions.width * 0.025,
-                    marginTop: dimensions.height * 0.1,
-                  }}
-                />
-
-                <TouchableOpacity onPress={() => {
-                  setIsDreamBoardPickWasVisible(true);
-                }}
-                  disabled={dreamText === '' || dreamImage === ''}
-                  style={{
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: dimensions.width * 0.025,
-                    borderColor: 'white',
-                    width: dimensions.width * 0.5,
-                    borderWidth: dimensions.width * 0.003,
-                    backgroundColor: 'white',
-                    alignSelf: 'center',
-                    position: 'absolute',
-                    bottom: dimensions.height * 0.05,
-                    opacity: dreamText === '' || dreamImage === '' ? 0.5 : 1,
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontFamily: fontPlusJakartaSansRegular,
-                      color: 'black',
-                      fontSize: dimensions.width * 0.043,
-                      textAlign: 'center',
-                      fontWeight: 600,
-                      paddingVertical: dimensions.height * 0.016,
-                    }}>
-                    Next
-                  </Text>
-                </TouchableOpacity>
-              </>
-            ) : (
-              <>
-                <Text
-                  style={{
-                    fontFamily: fontPlusJakartaSansRegular,
-                    color: 'white',
-                    fontSize: dimensions.width * 0.04,
-                    textAlign: 'center',
-                    alignSelf: 'center',
-                    marginTop: dimensions.height * 0.03,
-                    fontWeight: 500,
-                  }}>
-                  Your Goal
-                </Text>
-
-                {goalImage === '' || !goalImage ? (
-                  <TouchableOpacity
-                    onPress={() => handleGoalImagePicker()}
-                    style={{
-                      borderRadius: dimensions.width * 0.025,
-                      borderColor: 'white',
-                      borderWidth: dimensions.width * 0.005,
-                      width: dimensions.width * 0.4,
-                      height: dimensions.width * 0.4,
-                      alignSelf: 'center',
-                      marginTop: dimensions.height * 0.01,
-                    }}>
-
-                    <View style={{
-                      width: dimensions.width * 0.4,
-                      height: dimensions.width * 0.1,
-                      backgroundColor: 'white',
-                      borderRadius: dimensions.width * 0.025,
-                      position: 'absolute',
-                      bottom: 0,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      alignSelf: 'center',
-                      flexDirection: 'row',
-                    }}>
-                      <Text
-                        style={{
-                          fontFamily: fontPlusJakartaSansRegular,
-                          color: 'black',
-                          fontSize: dimensions.width * 0.04,
-                          textAlign: 'center',
-                          alignSelf: 'center',
-
-                          fontWeight: 500,
-                        }}>
-                        Add photo
-                      </Text>
-
-                      <Image
-                        source={require('../assets/icons/plusInSquareIcon.png')}
-                        style={{
-                          width: dimensions.width * 0.05,
-                          height: dimensions.width * 0.05,
-                          marginLeft: dimensions.width * 0.02,
-                        }}
-                        resizeMode='contain'
-                      />
-                    </View>
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    onPress={() => {
-                      handleDeleteAleaRiseImage('goal');
-                    }}
-                    style={{
-                      borderRadius: dimensions.width * 0.025,
-                      borderColor: 'white',
-                      borderWidth: dimensions.width * 0.005,
-                      width: dimensions.width * 0.4,
-                      height: dimensions.width * 0.4,
-                      alignSelf: 'center',
-                      marginTop: dimensions.height * 0.01,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    <Image
-                      source={{ uri: goalImage }}
-                      style={{
-                        width: dimensions.width * 0.39,
-                        height: dimensions.width * 0.39,
-                        borderRadius: dimensions.width * 0.025,
-                        alignSelf: 'center',
-                      }}
-                      resizeMode='stretch'
-                    />
-
-                    <View style={{
-                      width: dimensions.width * 0.4,
-                      height: dimensions.width * 0.1,
-                      backgroundColor: 'white',
-                      borderRadius: dimensions.width * 0.025,
-                      position: 'absolute',
-                      bottom: 0,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      alignSelf: 'center',
-                      flexDirection: 'row',
-                    }}>
-                      <Text
-                        style={{
-                          fontFamily: fontPlusJakartaSansRegular,
-                          color: 'black',
-                          fontSize: dimensions.width * 0.04,
-                          textAlign: 'center',
-                          alignSelf: 'center',
-
-                          fontWeight: 500,
-                        }}>
-                        Delete photo
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                )}
-
-                <TextInput
-                  placeholder="Type your dream here"
-                  value={goalText}
-                  onChangeText={setGoalText}
-                  placeholderTextColor="rgba(237, 237, 237, 0.85)"
-                  placeholderTextSize={dimensions.width * 0.03}
-                  multiline={true}
-                  textAlignVertical="top"
-                  style={{
-                    maxWidth: dimensions.width * 0.8,
-                    padding: dimensions.width * 0.03,
-                    fontFamily: fontPontanoSansRegular,
-                    fontSize: goalText.length > 0 ? dimensions.width * 0.043 : dimensions.width * 0.037,
-                    color: 'white',
-                    height: dimensions.height * 0.14,
-                    alignSelf: 'center',
-                    width: dimensions.width * 0.8,
-                    borderColor: 'white',
-                    borderWidth: dimensions.width * 0.005,
-                    borderRadius: dimensions.width * 0.025,
-                    marginTop: dimensions.height * 0.1,
-                  }}
-                />
-
-                <TouchableOpacity onPress={saveDreamToStorage}
-                  disabled={goalText === '' || goalImage === ''}
-                  style={{
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: dimensions.width * 0.025,
-                    borderColor: 'white',
-                    width: dimensions.width * 0.5,
-                    borderWidth: dimensions.width * 0.003,
-                    backgroundColor: 'white',
-                    alignSelf: 'center',
-                    position: 'absolute',
-                    bottom: dimensions.height * 0.05,
-                    opacity: goalText === '' || goalImage === '' ? 0.5 : 1,
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontFamily: fontPlusJakartaSansRegular,
-                      color: 'black',
-                      fontSize: dimensions.width * 0.043,
-                      textAlign: 'center',
-                      fontWeight: 600,
-                      paddingVertical: dimensions.height * 0.016,
-                    }}>
-                    Save
-                  </Text>
-                </TouchableOpacity>
-              </>
-            )}
-          </View>
-
-          <TouchableOpacity onPress={() => {
-            if (isDreamBoardPickWasVisible) {
-              setIsDreamBoardPickWasVisible(false);
-            } else {
-              setModalVisible(false);
-              setDreamText('');
-              setDreamImage('');
-              setGoalText('');
-              setGoalImage('');
-              setSelectedDreamCategory('');
-              setIsCategoriesVisible(false);
-            }
-          }}
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: dimensions.width * 0.025,
+            <View style={{
+              height: dimensions.height * 0.77,
+              width: dimensions.width * 0.9,
               borderColor: 'white',
-              width: dimensions.width * 0.8,
-              borderWidth: dimensions.width * 0.003,
-              backgroundColor: 'white',
+              borderWidth: dimensions.width * 0.005,
+              borderRadius: dimensions.width * 0.025,
               alignSelf: 'center',
-              position: 'absolute',
-              bottom: dimensions.height * 0.05,
+            }}>
+              <Text
+                style={{
+                  fontFamily: fontPlusJakartaSansRegular,
+                  color: 'white',
+                  fontSize: dimensions.width * 0.05,
+                  textAlign: 'center',
+                  alignSelf: 'center',
+                  marginTop: dimensions.height * 0.03,
+                  fontWeight: 600,
+                }}>
+                {selectedDreamCategory}
+              </Text>
+
+              {!isDreamBoardPickWasVisible ? (
+                <>
+                  <Text
+                    style={{
+                      fontFamily: fontPlusJakartaSansRegular,
+                      color: 'white',
+                      fontSize: dimensions.width * 0.04,
+                      textAlign: 'center',
+                      alignSelf: 'center',
+                      marginTop: dimensions.height * 0.03,
+                      fontWeight: 500,
+                    }}>
+                    Your Dream
+                  </Text>
+
+                  {dreamImage === '' || !dreamImage ? (
+                    <TouchableOpacity
+                      onPress={() => handleDreamImagePicker()}
+                      style={{
+                        borderRadius: dimensions.width * 0.025,
+                        borderColor: 'white',
+                        borderWidth: dimensions.width * 0.005,
+                        width: dimensions.width * 0.4,
+                        height: dimensions.width * 0.4,
+                        alignSelf: 'center',
+                        marginTop: dimensions.height * 0.01,
+                      }}>
+
+                      <View style={{
+                        width: dimensions.width * 0.4,
+                        height: dimensions.width * 0.1,
+                        backgroundColor: 'white',
+                        borderRadius: dimensions.width * 0.025,
+                        position: 'absolute',
+                        bottom: 0,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        alignSelf: 'center',
+                        flexDirection: 'row',
+                      }}>
+                        <Text
+                          style={{
+                            fontFamily: fontPlusJakartaSansRegular,
+                            color: 'black',
+                            fontSize: dimensions.width * 0.04,
+                            textAlign: 'center',
+                            alignSelf: 'center',
+
+                            fontWeight: 500,
+                          }}>
+                          Add photo
+                        </Text>
+
+                        <Image
+                          source={require('../assets/icons/plusInSquareIcon.png')}
+                          style={{
+                            width: dimensions.width * 0.05,
+                            height: dimensions.width * 0.05,
+                            marginLeft: dimensions.width * 0.02,
+                          }}
+                          resizeMode='contain'
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() => {
+                        handleDeleteAleaRiseImage('dream');
+                      }}
+                      style={{
+                        borderRadius: dimensions.width * 0.025,
+                        borderColor: 'white',
+                        borderWidth: dimensions.width * 0.005,
+                        width: dimensions.width * 0.4,
+                        height: dimensions.width * 0.4,
+                        alignSelf: 'center',
+                        marginTop: dimensions.height * 0.01,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                      <Image
+                        source={{ uri: dreamImage }}
+                        style={{
+                          width: dimensions.width * 0.39,
+                          height: dimensions.width * 0.39,
+                          borderRadius: dimensions.width * 0.025,
+                          alignSelf: 'center',
+                        }}
+                        resizeMode='stretch'
+                      />
+
+                      <View style={{
+                        width: dimensions.width * 0.4,
+                        height: dimensions.width * 0.1,
+                        backgroundColor: 'white',
+                        borderRadius: dimensions.width * 0.025,
+                        position: 'absolute',
+                        bottom: 0,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        alignSelf: 'center',
+                        flexDirection: 'row',
+                      }}>
+                        <Text
+                          style={{
+                            fontFamily: fontPlusJakartaSansRegular,
+                            color: 'black',
+                            fontSize: dimensions.width * 0.04,
+                            textAlign: 'center',
+                            alignSelf: 'center',
+
+                            fontWeight: 500,
+                          }}>
+                          Delete photo
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  )}
+
+                  <TextInput
+                    placeholder="Type your dream here"
+                    value={dreamText}
+                    onChangeText={setDreamText}
+                    placeholderTextColor="rgba(237, 237, 237, 0.85)"
+                    placeholderTextSize={dimensions.width * 0.03}
+                    multiline={true}
+                    textAlignVertical="top"
+                    style={{
+                      maxWidth: dimensions.width * 0.8,
+                      padding: dimensions.width * 0.03,
+                      fontFamily: fontPontanoSansRegular,
+                      fontSize: dreamText.length > 0 ? dimensions.width * 0.043 : dimensions.width * 0.037,
+                      color: 'white',
+                      height: dimensions.height * 0.14,
+                      alignSelf: 'center',
+                      width: dimensions.width * 0.8,
+                      borderColor: 'white',
+                      borderWidth: dimensions.width * 0.005,
+                      borderRadius: dimensions.width * 0.025,
+                      marginTop: dimensions.height * 0.1,
+                    }}
+                  />
+
+                  <TouchableOpacity onPress={() => {
+                    setIsDreamBoardPickWasVisible(true);
+                  }}
+                    disabled={dreamText === '' || dreamImage === ''}
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: dimensions.width * 0.025,
+                      borderColor: 'white',
+                      width: dimensions.width * 0.5,
+                      borderWidth: dimensions.width * 0.003,
+                      backgroundColor: 'white',
+                      alignSelf: 'center',
+                      position: 'absolute',
+                      bottom: dimensions.height * 0.05,
+                      opacity: dreamText === '' || dreamImage === '' ? 0.5 : 1,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: fontPlusJakartaSansRegular,
+                        color: 'black',
+                        fontSize: dimensions.width * 0.043,
+                        textAlign: 'center',
+                        fontWeight: 600,
+                        paddingVertical: dimensions.height * 0.016,
+                      }}>
+                      Next
+                    </Text>
+                  </TouchableOpacity>
+                </>
+              ) : (
+                <>
+                  <Text
+                    style={{
+                      fontFamily: fontPlusJakartaSansRegular,
+                      color: 'white',
+                      fontSize: dimensions.width * 0.04,
+                      textAlign: 'center',
+                      alignSelf: 'center',
+                      marginTop: dimensions.height * 0.03,
+                      fontWeight: 500,
+                    }}>
+                    Your Goal
+                  </Text>
+
+                  {goalImage === '' || !goalImage ? (
+                    <TouchableOpacity
+                      onPress={() => handleGoalImagePicker()}
+                      style={{
+                        borderRadius: dimensions.width * 0.025,
+                        borderColor: 'white',
+                        borderWidth: dimensions.width * 0.005,
+                        width: dimensions.width * 0.4,
+                        height: dimensions.width * 0.4,
+                        alignSelf: 'center',
+                        marginTop: dimensions.height * 0.01,
+                      }}>
+
+                      <View style={{
+                        width: dimensions.width * 0.4,
+                        height: dimensions.width * 0.1,
+                        backgroundColor: 'white',
+                        borderRadius: dimensions.width * 0.025,
+                        position: 'absolute',
+                        bottom: 0,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        alignSelf: 'center',
+                        flexDirection: 'row',
+                      }}>
+                        <Text
+                          style={{
+                            fontFamily: fontPlusJakartaSansRegular,
+                            color: 'black',
+                            fontSize: dimensions.width * 0.04,
+                            textAlign: 'center',
+                            alignSelf: 'center',
+
+                            fontWeight: 500,
+                          }}>
+                          Add photo
+                        </Text>
+
+                        <Image
+                          source={require('../assets/icons/plusInSquareIcon.png')}
+                          style={{
+                            width: dimensions.width * 0.05,
+                            height: dimensions.width * 0.05,
+                            marginLeft: dimensions.width * 0.02,
+                          }}
+                          resizeMode='contain'
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() => {
+                        handleDeleteAleaRiseImage('goal');
+                      }}
+                      style={{
+                        borderRadius: dimensions.width * 0.025,
+                        borderColor: 'white',
+                        borderWidth: dimensions.width * 0.005,
+                        width: dimensions.width * 0.4,
+                        height: dimensions.width * 0.4,
+                        alignSelf: 'center',
+                        marginTop: dimensions.height * 0.01,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                      <Image
+                        source={{ uri: goalImage }}
+                        style={{
+                          width: dimensions.width * 0.39,
+                          height: dimensions.width * 0.39,
+                          borderRadius: dimensions.width * 0.025,
+                          alignSelf: 'center',
+                        }}
+                        resizeMode='stretch'
+                      />
+
+                      <View style={{
+                        width: dimensions.width * 0.4,
+                        height: dimensions.width * 0.1,
+                        backgroundColor: 'white',
+                        borderRadius: dimensions.width * 0.025,
+                        position: 'absolute',
+                        bottom: 0,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        alignSelf: 'center',
+                        flexDirection: 'row',
+                      }}>
+                        <Text
+                          style={{
+                            fontFamily: fontPlusJakartaSansRegular,
+                            color: 'black',
+                            fontSize: dimensions.width * 0.04,
+                            textAlign: 'center',
+                            alignSelf: 'center',
+
+                            fontWeight: 500,
+                          }}>
+                          Delete photo
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  )}
+
+                  <TextInput
+                    placeholder="Type your dream here"
+                    value={goalText}
+                    onChangeText={setGoalText}
+                    placeholderTextColor="rgba(237, 237, 237, 0.85)"
+                    placeholderTextSize={dimensions.width * 0.03}
+                    multiline={true}
+                    textAlignVertical="top"
+                    style={{
+                      maxWidth: dimensions.width * 0.8,
+                      padding: dimensions.width * 0.03,
+                      fontFamily: fontPontanoSansRegular,
+                      fontSize: goalText.length > 0 ? dimensions.width * 0.043 : dimensions.width * 0.037,
+                      color: 'white',
+                      height: dimensions.height * 0.14,
+                      alignSelf: 'center',
+                      width: dimensions.width * 0.8,
+                      borderColor: 'white',
+                      borderWidth: dimensions.width * 0.005,
+                      borderRadius: dimensions.width * 0.025,
+                      marginTop: dimensions.height * 0.1,
+                    }}
+                  />
+
+                  <TouchableOpacity onPress={saveDreamToStorage}
+                    disabled={goalText === '' || goalImage === ''}
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: dimensions.width * 0.025,
+                      borderColor: 'white',
+                      width: dimensions.width * 0.5,
+                      borderWidth: dimensions.width * 0.003,
+                      backgroundColor: 'white',
+                      alignSelf: 'center',
+                      position: 'absolute',
+                      bottom: dimensions.height * 0.05,
+                      opacity: goalText === '' || goalImage === '' ? 0.5 : 1,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: fontPlusJakartaSansRegular,
+                        color: 'black',
+                        fontSize: dimensions.width * 0.043,
+                        textAlign: 'center',
+                        fontWeight: 600,
+                        paddingVertical: dimensions.height * 0.016,
+                      }}>
+                      Save
+                    </Text>
+                  </TouchableOpacity>
+                </>
+              )}
+            </View>
+
+            <TouchableOpacity onPress={() => {
+              if (isDreamBoardPickWasVisible) {
+                setIsDreamBoardPickWasVisible(false);
+              } else {
+                setModalVisible(false);
+                setDreamText('');
+                setDreamImage('');
+                setGoalText('');
+                setGoalImage('');
+                setSelectedDreamCategory('');
+                setIsCategoriesVisible(false);
+              }
             }}
-          >
-            <Text
               style={{
-                fontFamily: fontPlusJakartaSansRegular,
-                color: 'black',
-                fontSize: dimensions.width * 0.043,
-                textAlign: 'center',
-                fontWeight: 600,
-                paddingVertical: dimensions.height * 0.016,
-              }}>
-              Back
-            </Text>
-          </TouchableOpacity>
-        </SafeAreaView>
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: dimensions.width * 0.025,
+                borderColor: 'white',
+                width: dimensions.width * 0.8,
+                borderWidth: dimensions.width * 0.003,
+                backgroundColor: 'white',
+                alignSelf: 'center',
+                position: 'absolute',
+                bottom: dimensions.height * 0.05,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: fontPlusJakartaSansRegular,
+                  color: 'black',
+                  fontSize: dimensions.width * 0.043,
+                  textAlign: 'center',
+                  fontWeight: 600,
+                  paddingVertical: dimensions.height * 0.016,
+                }}>
+                Back
+              </Text>
+            </TouchableOpacity>
+          </SafeAreaView>
+        </TouchableWithoutFeedback>
       </Modal>
     </SafeAreaView>
   );
